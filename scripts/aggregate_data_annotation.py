@@ -10,18 +10,20 @@ def check_choices(devins_choice, nasims_choice, drLis_choice):
         main_choice = round(sum(choices) / len(choices))
     else:
         main_choice = None  # or some default value if all choices are NaN
-    print(main_choice) if not main_choice in [1, 2, None] else None
-    aggregate_choices = ['devin', 'nasim']
-    if not pd.isna(drLis_choice):
-        aggregate_choices.append('drLi')
+    if devins_choice == main_choice:
+        aggregate_choices.append['devin']
+    if nasims_choice == main_choice:
+        aggregate_choices.append['nasim']
+    if drLis_choice == main_choice: 
+        aggregate_choices.append['drLi']
     
     return aggregate_choices, main_choice
 
 
 def aggregate_row(aggregate_choices, main_choice, columns_to_aggregate, index):
     drLis_value = drLis_annotations.iloc[index] if 'drLi' in aggregate_choices else None
-    devins_value = devins_annotations.iloc[index] 
-    nasims_value = nasims_annotations.iloc[index] 
+    devins_value = devins_annotations.iloc[index] if 'devin' in aggregate_choices else None
+    nasims_value = nasims_annotations.iloc[index] if 'nasim' in aggregate_choices else None
 
     aggregated_values = {}
     aggregated_values['id'] = devins_value['id']
