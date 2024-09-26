@@ -28,8 +28,13 @@ def aggregate_row(aggregate_choices, main_choice, columns_to_aggregate, index):
     aggregated_values = {}
     aggregated_values['id'] = devins_value['id']
     aggregated_values['which explanation 1 or 2 '] = main_choice
+
+    values = []
     for column in columns_to_aggregate:
-        values = [devins_value[column], nasims_value[column]]
+        if devins_value is not None:
+            values.append[devins_value[column]]
+        if nasims_value is not None:
+            values.append[nasims_value[column]]
         if drLis_value is not None:
             values.append(drLis_value[column])
         
