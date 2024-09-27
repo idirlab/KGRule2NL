@@ -3,7 +3,7 @@ import re
 
 
 def task1(df):
-    count_df = pd.read_csv('unique_rule_types.csv')
+    count_df = pd.read_csv('data/unique_rule_types.csv')
 
     unique_rules = df['formatted_rule'].unique()
     count_df['left_count'] = 0
@@ -39,36 +39,6 @@ def task1(df):
     return count_df
 
 
-def task1_forRawDf(df):
-    count_df = pd.DataFrame()
-
-    count_df['rule'] = df['Rule']
-    unique_rules = df['Rule']
-    count_df['left_count'] = 0
-    count_df['right_count'] = 0
-    left_rules_dict = {rule: 0 for rule in unique_rules}
-    right_rules_dict = {rule: 0 for rule in unique_rules}
-    
-    for index, row in df.iterrows():
-        rule = row['Rule']
-        left_desc = row['left_desc']
-        right_desc = row['right_desc']
-
-        # Check for '.' in left_desc
-        left_rules_dict[rule] += sum(desc.count('.') for desc in left_desc)
-
-        # Check for '.' in right_desc
-        if any('.' in desc for desc in right_desc):
-            right_rules_dict[rule] += 1
-
-
-
-    # Update count_df with the final values from the dictionaries
-    count_df['left_count'] = count_df['rule'].map(left_rules_dict)
-    count_df['right_count'] = count_df['rule'].map(right_rules_dict)
-
-    return count_df
-
 
 def task2(df):
     # Collect unique rules
@@ -79,7 +49,7 @@ def task2(df):
     rules_df.reset_index(inplace=True)
 
     rules_df.rename(columns={'index': 'rule', 'rule': 'id'}, inplace=True)
-    rules_df.to_csv('rules_with_desc.csv', index=False)
+    rules_df.to_csv('data/all_rule_types.csv', index=False)
 
     return rules_dict
 
@@ -102,8 +72,6 @@ def format_df(df):
     my_df['full_rule'] = my_df['left'] + ' => ' + my_df['right']
 
     my_df = add_formatted_rule(my_df)
-
-    my_df.to_csv('formatted_rules.csv', index_label='id')
 
     return my_df
 
@@ -144,7 +112,7 @@ def remove_descs(part, descs):
     return part
 
 if __name__ == '__main__':
-    df = pd.read_csv('updated_rules.csv')
+    df = pd.read_csv('data/rule_type_descriptions.csv')
     
     formatted_df = format_df(df)
 
@@ -157,29 +125,15 @@ if __name__ == '__main__':
     unique_rules_df = unique_rules_df.drop_duplicates()
     unique_rules_df.reset_index(drop=True, inplace=True)
     unique_rules_df.index = unique_rules_df.index + 1
-    unique_rules_df.to_csv('unique_rule_types.csv', index_label='id')
+    unique_rules_df.to_csv('data/unique_rule_types.csv', index_label='id')
 
     df.reset_index(inplace=True)
     formatted_df.reset_index(inplace=True)
 
-    merged_df = df.merge(formatted_df[['index', 'left_desc', 'right_desc', 'formatted_rule']], on='index', how='left')
-    merged_df.drop(columns=['index'], inplace=True)
-
-    counted_df = task1_forRawDf(merged_df)
-    merged_df['id'] = merged_df.index + 1  
-    counted_df['id'] = counted_df.index + 1  
-    merged_df = pd.merge(merged_df, counted_df[['id', 'left_count', 'right_count']], on='id', how='left')
-    merged_df.drop(columns=['id', 'left_desc', 'right_desc'], inplace=True)
-    merged_df.rename(columns={'left_count': 'left_concat_count', 'right_count': 'right_concat_count', 'formatted_rule': 'rule_type'}, inplace=True)
-    rule_type_to_id = task2(formatted_df)
-    merged_df['rule_type'] = merged_df['rule_type'].map(rule_type_to_id)
-    merged_df.to_csv('new_updated_rules.csv', index=False)
-
-
 
     #get statistics on the rules
     print("Statistics: \n")
-    print(task1(formatted_df))
+    print(task1(formatted_df).to_string(index=False))
     print("""
            
     ========================

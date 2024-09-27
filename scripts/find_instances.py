@@ -13,10 +13,10 @@ def replace_consts(part):
     return re.sub(pattern, replacement, part)
 
 if __name__ == '__main__':
-    instances_df = pd.read_csv('instances.csv')
+    instances_df = pd.read_csv('data/instances.csv')
     instances_df['full_instance'] = instances_df['head'] + " " + instances_df['rule'] + " " + instances_df['tail']
-    unique_rules_df = pd.read_csv('rules_with_desc.csv')
-    rule_types_df = pd.read_csv('unique_rule_types.csv')  
+    unique_rules_df = pd.read_csv('data/all_rule_types.csv')
+    rule_types_df = pd.read_csv('data/unique_rule_types.csv')  
 
     unique_rules = unique_rules_df['rule'].unique()
     unique_rules_dict = {rule: '' for rule in unique_rules}
@@ -326,7 +326,7 @@ if __name__ == '__main__':
 
 
     results_df = pd.DataFrame(list(unique_rules_dict.items()), columns=['rule', 'rule_instance'])
-    results_df.to_csv('examples.csv', index=False)
+    results_df.to_csv('data/rule_type_examples.csv', index=False)
 
     head_side_set2 = {left_head for (left_head, _) in left_instances_set2}
     tail_side_set2 = {left_tail for (_, left_tail) in left_instances_set2}
