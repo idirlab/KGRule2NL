@@ -5,7 +5,7 @@ def process_rule_part(part):
     """Process a rule part: normalize whitespace, split, and replace digits with 'c'"""
     normalized = re.sub(r'\s+', ' ', part).strip()
     tokens = normalized.split(' ')
-    return ['c' if token.isdigit() else token for token in tokens]
+    return [token for token in tokens]
 
 def format_df(df):
     
